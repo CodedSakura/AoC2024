@@ -16,6 +16,9 @@ Object.defineProperties(Array.prototype, {
 	map2d: { value(fn) {
 		return this.map((r, y) => r.map((v, x, a) => fn(v, x, y, a)));
 	} },
+	map3d: { value(fn) {
+		return this.map((r, z) => r.map((c, y) => c.map((v, x, a) => fn(v, x, y, z, a))));
+	} },
 	mapWrap: { value(fn) {
 		return [ this ].map(fn)[0];
 	} },
@@ -42,6 +45,9 @@ Object.defineProperties(String.prototype, {
 	} },
 	numbers2d: { value() {
 		return this.lines().map(v => v.numbers());
+	} },
+	findAll: { value(expr) {
+	    return Array.from(this.matchAll(expr));
 	} },
 });
 
