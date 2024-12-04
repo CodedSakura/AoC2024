@@ -34,6 +34,40 @@ Object.defineProperties(Array.prototype, {
 	last: { value() {
 		return this[this.length - 1];
 	} },
+	copy: { value() {
+		return [ ...this ];
+	} },
+	diagonal: { value() {
+		// https://stackoverflow.com/a/57680560
+		return this.reduceRight((r, a, i, w) => {
+			a.forEach((e, j) => {
+				const pos = j + (w.length - i - 1)
+				if(!r[pos]) r[pos] = []
+				r[pos].unshift(e)
+			})
+
+			return r;
+		}, []);
+	} },
+	combinations: { value() {
+		// https://stackoverflow.com/a/59942031
+		const combi = [];
+		let temp = [];
+		const slent = Math.pow(2, this.length);
+
+		for (var i = 0; i < slent; i++) {
+			temp = [];
+			for (var j = 0; j < this.length; j++) {
+				if ((i & Math.pow(2, j))) {
+					temp.push(this[j]);
+				}
+			}
+			if (temp.length > 0) {
+				combi.push(temp);
+			}
+		}
+		return combi;
+	} },
 });
 
 Object.defineProperties(String.prototype, {
@@ -47,7 +81,13 @@ Object.defineProperties(String.prototype, {
 		return this.lines().map(v => v.numbers());
 	} },
 	findAll: { value(expr) {
-	    return Array.from(this.matchAll(expr));
+		return Array.from(this.matchAll(expr));
+	} },
+	chars2d: { value() {
+		return this.lines().map(v => v.split(""));
+	} },
+	count: { value(text) {
+		return this.split(text).length - 1;
 	} },
 });
 
