@@ -7,6 +7,9 @@ Object.defineProperties(Array.prototype, {
 	sum: { value() {
 		return this.reduce((acc, val) => acc + val, 0);
 	} },
+	product: { value() {
+		return this.reduce((acc, val) => acc * val, 1);
+	} },
 	transpose: { value() {
 		return this[0].map((_, i) => this.map(r => r[i]));
 	} },
@@ -115,6 +118,9 @@ Object.defineProperties(Array.prototype, {
 	} },
 	add: { value(...arrs) {
 		return this.map((v, i) => v + arrs.map(a => a[i] ?? 0).sum());
+	} },
+	unique: { value() {
+		return Array.from(new Set(this));
 	} },
 });
 

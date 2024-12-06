@@ -39,7 +39,3 @@ utils.read("input.txt")
 	}))
 	.run(({ visited }) => visited.size)
 	.print();
-
-// 4662 - too low. off by 1? yes -- did not count exiting on the 0 axis
-
-[1,1].inBounds([1,1]).print();

@@ -36,8 +36,8 @@ utils.read("input.txt")
 	)
 	.run((data) => Array
 		.from(data.visited)
-		.map(v => (x = v % data.size[0], [ x, (v - x) / data.size[0] ]))
-		.filter(([ x, y ]) => x !== data.pos[0] || y !== data.pos[1])
+		.map(v => (x = v % data.size[0], [ (v - x) / data.size[0], x ]))
+		// .filter(([ x, y ]) => x !== data.pos[0] || y !== data.pos[1])
 		.map(([ y, x ]) => ({ 
 			...data,
 			visited: new Set(), 
@@ -45,7 +45,7 @@ utils.read("input.txt")
 			pos: data.start,
 			dir: [ -1, 0, "up", 0 ]
 		})))
-	.map((data, i, { length }) => (`${i+1} / ${length}`.print(), data)
+	.map((data, i) => (i.print(), data)
 		.while(
 			({ pos, size, dir, visited, visitKey }) => pos.inBounds(size) && 
 					!visited.has(visitKey({ pos, dir, size })),
@@ -67,7 +67,9 @@ utils.read("input.txt")
 		)
 	)
 	.filter(({ pos, size, dir, visited, visitKey }) => visited.has(visitKey({ pos, dir, size })))
-	// .map((data, i) => (i.print(), data.map.map2d((c, x, y) => data.visited.has(y * data.size[1] + x) ? '^' : 
+	// .map((data, i) => (i.print(), data.map.map2d((c, x, y) => 
+	// 		x === data.obstacle[0] && y === data.obstacle[1] ? 'O' :
+	// 		data.visited.has(y * data.size[1] + x) ? '^' : 
 	// 		data.visited.has(y * data.size[1] + x + data.size[0] * data.size[1]) ? '>' : 
 	// 		data.visited.has(y * data.size[1] + x + data.size[0] * data.size[1] * 2) ? 'v' : 
 	// 		data.visited.has(y * data.size[1] + x + data.size[0] * data.size[1] * 3) ? '<' : 
@@ -77,6 +79,6 @@ utils.read("input.txt")
 	.print();
 
 // 6 on test input
-// real input takes 32.4s
+// real input takes 4s
 // 1345 - too low
-// 1430 - too low
+// 1430 - too low, not off-by-1
