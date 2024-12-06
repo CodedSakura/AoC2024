@@ -68,6 +68,37 @@ Object.defineProperties(Array.prototype, {
 		}
 		return combi;
 	} },
+	countOverlaps2d: { value(target, nullWildcard = true) {
+		const eq = (a, b) => nullWildcard ? a === null || b === null || a === b : a === b;
+
+		let count = 0;
+
+		for (let y = 0; y < this.length - target.length + 1; y++) {
+			const row = this[y];
+			
+			colFor:
+			for (let x = 0; x < row.length - target[0].length + 1; x++) {
+				if (!eq(row[x], target[0][0])) {
+					continue colFor;
+				}
+
+				for (let ty = 0; ty < target.length; ty++) {
+					const tRow = target[ty];
+					for (let tx = 0; tx < tRow.length; tx++) {
+						// console.log("overlap", `${x} ${y}`, target, "check", `${tx} ${ty}`, `(${this[y+ty][x+tx]} ?= ${target[ty][tx]})`)
+						if (!eq(this[y+ty][x+tx], target[ty][tx])) {
+							continue colFor;
+						}
+					}
+				}
+
+				// console.log("overlap", `${x} ${y}`, target)
+				count++;
+			}
+		}
+
+		return count;
+	} },
 });
 
 Object.defineProperties(String.prototype, {
@@ -93,6 +124,11 @@ Object.defineProperties(String.prototype, {
 
 Object.defineProperties(Object.prototype, {
 	print: { value(label) {
+		if (typeof label === "function") {
+			console.log(label(this));
+			return this;
+		}
+
 		let p = this;
 		if (this instanceof Number || this instanceof String) {
 			p = this.toString();

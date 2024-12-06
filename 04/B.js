@@ -1,36 +1,34 @@
 const utils = require("../utils");
 
-utils.read("test.txt")
+utils.read("input.txt")
 	.chars2d()
 	.wrap()
 	.map(g => [
 		g,
 		[
-			[ "M", null, null ],
+			[ "M", null, "S" ],
 			[ null, "A", null ],
-			[ null, null, "S" ],
+			[ "M", null, "S" ],
 		],
-	])
-	.map(([g, x]) => [
-		g,
 		[
-			x,
-			x.map(r => r.copy().reverse()),
-			x.transpose().reverse(),
-			x.map(r => r.copy().reverse()).reverse(),
+			[ "M", null, "M" ],
+			[ null, "A", null ],
+			[ "S", null, "S" ],
+		],
+		[
+			[ "S", null, "S" ],
+			[ null, "A", null ],
+			[ "M", null, "M" ],
+		],
+		[
+			[ "S", null, "M" ],
+			[ null, "A", null ],
+			[ "S", null, "M" ],
 		],
 	])
-	.map(([g, x]) => [
-		g, 
-		x.combinations()
-			.filter(v => v.length === 2 && v[0][0][0] != v[1][0][0] && v[0][0][2] != v[1][0][2])
-			.map(([a, b]) => [
-				[ a[0][0] ?? b[0][0], null, a[0][2] ?? b[0][2] ],
-				[ null, "A", null ],
-				[ a[2][0] ?? b[2][0], null, a[2][2] ?? b[2][2] ],
-			]),
-	])
+	.map(([g, ...x]) => x.map(w => g.countOverlaps2d(w)))
 	.first()
-	.print()
-	.second()
+	.sum()
 	.print();
+
+// 1854 - too low -- wasn't taking the last col/row in consideration (and the test had it empty)
