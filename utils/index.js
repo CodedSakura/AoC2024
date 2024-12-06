@@ -22,6 +22,15 @@ Object.defineProperties(Array.prototype, {
 	mapWrap: { value(fn) {
 		return [ this ].map(fn)[0];
 	} },
+	findRow: { value(fn) {
+		return this.find((row, y) => row.some((v, x, a) => fn(v, x, y, a)));
+	} },
+	findRowIndex: { value(fn) {
+		return this.findIndex((row, y) => row.some((v, x, a) => fn(v, x, y, a)));
+	} },
+	findIndex2d: { value(fn) {
+		return [ this.findRowIndex(fn), this.findRow(fn).findIndex(fn) ];
+	} },
 	wrap: { value() {
 		return [ this ];
 	} },
@@ -99,6 +108,14 @@ Object.defineProperties(Array.prototype, {
 
 		return count;
 	} },
+	inBounds: { value(bounds) {
+		return this.every((c, i) => Array.isArray(bounds[i]) ? 
+			bounds[i][0] <= c && c <= bounds[i][1] :
+			0 <= c && c < bounds[i]);
+	} },
+	add: { value(...arrs) {
+		return this.map((v, i) => v + arrs.map(a => a[i] ?? 0).sum());
+	} },
 });
 
 Object.defineProperties(String.prototype, {
@@ -140,6 +157,16 @@ Object.defineProperties(Object.prototype, {
 			console.log(p);
 		}
 		return this;
+	} },
+	run: { value(fn) {
+		return fn(this);
+	} },
+	while: { value(condition, fn) {
+		let data = this;
+		while (condition(data)) {
+			data = fn(data);
+		}
+		return data;
 	} },
 });
 
