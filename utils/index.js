@@ -105,11 +105,11 @@ Object.defineProperties(String.prototype, {
 	lines: { value() {
 		return this.split("\n");
 	} },
-	numbers: { value() {
-		return this.split(/\s+/).map(Number);
+	numbers: { value(separator = /\s+/) {
+		return this.split(separator).map(Number);
 	} },
-	numbers2d: { value() {
-		return this.lines().map(v => v.numbers());
+	numbers2d: { value(separator = /\s+/) {
+		return this.lines().map(v => v.numbers(separator));
 	} },
 	findAll: { value(expr) {
 		return Array.from(this.matchAll(expr));
