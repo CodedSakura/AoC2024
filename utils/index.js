@@ -32,7 +32,7 @@ Object.defineProperties(Array.prototype, {
 		return this.findIndex((row, y) => row.some((v, x, a) => fn(v, x, y, a)));
 	} },
 	findIndex2d: { value(fn) {
-		return [ this.findRowIndex(fn), this.findRow(fn).findIndex(fn) ];
+		return [ this.findRow(fn).findIndex(fn), this.findRowIndex(fn) ];
 	} },
 	wrap: { value() {
 		return [ this ];
@@ -45,6 +45,22 @@ Object.defineProperties(Array.prototype, {
 	} },
 	last: { value() {
 		return this[this.length - 1];
+	} },
+	get2d: { value(x, y) {
+		[ x, y ] = Array.isArray(x) ? x : [ x, y ];
+		return (this[y] ?? [])[x];
+	} },
+	get3d: { value(x, y, z) {
+		[ x, y, z ] = Array.isArray(x) ? x : [ x, y, z ];
+		return ((this[z] ?? [])[y] ?? [])[x];
+	} },
+	size2d: { value() {
+		return [ this[0].length, this.length ];
+	} },
+	flatIndex2d: { value(size) {
+		return Array.isArray(size) ? 
+			this[1] * size[0] + this[0] : 
+			this[1] * size.width + this[0];
 	} },
 	copy: { value() {
 		return [ ...this ];
@@ -122,6 +138,13 @@ Object.defineProperties(Array.prototype, {
 	unique: { value() {
 		return Array.from(new Set(this));
 	} },
+	equals: { value(that) {
+		// https://stackoverflow.com/a/16436975
+		if (this === that) return true;
+		if (that === null || !Array.isArray(that)) return false;
+		if (this.length !== that.length) return false;
+		return this.every((v, i) => Array.isArray(v) ? v.equals(that[i]) : that[i] === v);
+	} },
 });
 
 Object.defineProperties(String.prototype, {
@@ -142,6 +165,14 @@ Object.defineProperties(String.prototype, {
 	} },
 	count: { value(text) {
 		return this.split(text).length - 1;
+	} },
+});
+
+Object.defineProperties(Number.prototype, {
+	unflatIndex2d: { value(size) {
+		return Array.isArray(size) ? 
+			(x = this % size[0], [ x, (this - x) / size[0] ]) :
+			(x = this % size.width, [ x, (this - x) / size.width ]);
 	} },
 });
 
