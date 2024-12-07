@@ -2,8 +2,7 @@ const utils = require("../utils");
 
 utils.read("input.txt")
 	.chars2d()
-	.wrap()
-	.map(g => [
+	.run(g => [
 		g,
 		[
 			[ "M", null, "S" ],
@@ -26,8 +25,7 @@ utils.read("input.txt")
 			[ "S", null, "M" ],
 		],
 	])
-	.map(([g, ...x]) => x.map(w => g.countOverlaps2d(w)))
-	.first()
+	.run(([g, ...x]) => x.map(w => g.countOverlaps2d(w)))
 	.sum()
 	.print();
 

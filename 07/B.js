@@ -13,6 +13,6 @@ utils.read("input.txt")
 			.filter(v => v >= 1), [ test ])
 		.min() === 1)
 	// .print()
-	.map(v => v.first())
+	.map(v => v.first)
 	.sum()
 	.print();

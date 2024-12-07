@@ -3,8 +3,7 @@ const utils = require("../utils");
 utils.read("input.txt")
 	.split("\n\n")
 	.map(v => v.numbers2d(/\||,/))
-	.wrap()
-	.map(([ rules, updates ]) => [ 
+	.run(([ rules, updates ]) => [ 
 		rules.reduce((map, [ k, v ]) => {
 			if (map.has(k)) map.get(k).push(v);
 			else map.set(k, [v]);
@@ -12,7 +11,7 @@ utils.read("input.txt")
 		}, new Map()), 
 		updates,
 	])
-	.map(([ rules, updates ]) => [ 
+	.run(([ rules, updates ]) => [ 
 		rules, 
 		updates
 			.filter(update => !update
@@ -20,10 +19,9 @@ utils.read("input.txt")
 					.slice(0, i)
 					.every(v => !(rules.get(k) ?? []).includes(v)))),
 	])
-	.map(([ rules, updates ]) => updates
+	.run(([ rules, updates ]) => updates
 		.map(update => update
 			.sort((a, b) => (rules.get(a) ?? []).includes(b) ? -1 : 1)))
-	.first()
 	.map(v => v[(v.length - 1) / 2])
 	.sum()
 	.print();

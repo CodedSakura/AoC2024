@@ -7,6 +7,6 @@ utils.read("input.txt")
 			.flatMap(v => (v / val) % 1 === 0 ? [ v / val, v - val ] : v - val)
 			.filter(v => v >= 1), [ test ])
 		.min() === 1)
-	.map(v => v.first())
+	.map(v => v.first)
 	.sum()
 	.print();

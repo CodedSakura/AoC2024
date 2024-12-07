@@ -1,33 +1,28 @@
 const utils = require("../utils");
+const { Pos, PosRot } = utils;
 
 utils.read("input.txt")
 	.chars2d()
 	.run((map) => ({
-		start: map.findIndex2d(v => v === '^'),
+		start: map.findIndex2d(v => v === '^').toPos(PosRot.Up),
 		map,
 		size: map.size2d(),
 	}))
 	.run(({ map, start, size }) => ({
 		pos: start,
-		dir: [ 0, -1, "up", 0 ], // y, x, name, offset for caching
-		rotate: {
-			"up":    [  1,  0, "right", 1 ],
-			"right": [  0,  1, "down",  2 ],
-			"down":  [ -1,  0, "left",  3 ],
-			"left":  [  0, -1, "up",    0 ],
-		},
 		size,
-		map: (map[start[1]][start[0]] = '.', map),
+		map: (map[start.y][start.x] = '.', map),
 		visited: new Set(),
-		visitKey: ({ pos, size, dir }) => pos.flatIndex2d(size) + size.product() * dir[3],
 		start,
 	}))
 	.while(
 		({ pos, size, dir }) => pos.inBounds(size),
 		({ pos, dir, rotate, size, map, visited, ...rest }) => ({
-			pos: pos.add(dir),
-			dir: dir.while(d => map.get2d(pos.add(dir, d)) == '#', d => rotate[d[2]]),
-			visited: (visited.add(pos.flatIndex2d(size)), visited),
+			pos: pos.move().while(
+				p => map.get2d(p.move()) == '#',
+				d => d.cw(),
+			),
+			visited: visited.add(pos.pos),
 			rotate,
 			size,
 			map,
@@ -36,50 +31,42 @@ utils.read("input.txt")
 	)
 	.run((data) => Array
 		.from(data.visited)
-		.map(v => v.unflatIndex2d(data.size))
-		.map(([ x, y ]) => ({ 
+		.map(pos => ({ 
 			...data,
 			visited: new Set(), 
 			path: data.visited,
-			obstacle: [ x, y ],
+			obstacle: pos,
 			pos: data.start,
-			dir: [ 0, -1, "up", 0 ],
 		})))
 	.map((data, i) => (i, data)
 		.while(
-			({ pos, size, dir, visited, visitKey }) => pos.inBounds(size) && 
-					!visited.has(visitKey({ pos, dir, size })),
-			({ pos, dir, rotate, size, map, visited, visitKey, obstacle, ...rest }) => ({
-				pos: pos.add(dir),
-				dir: dir.while(
-					d => map.get2d(pos.add(dir, d)) == '#' ||
-						pos.add(dir, d).equals(obstacle),
-					d => rotate[d[2]],
+			({ pos, size, visited }) => pos.inBounds(size) && !visited.has(pos),
+			({ pos, map, visited, obstacle, ...rest }) => ({
+				pos: pos.move().while(
+					p => map.get2d(p.move()) == '#' || p.move().pos === obstacle,
+					p => p.cw(),
 				),
-				visited: (visited.add(visitKey({ pos, dir, size })), visited),
-				rotate,
-				size,
+				visited: visited.add(pos),
 				map,
-				visitKey,
 				obstacle,
 				...rest,
 			}),
 		)
 	)
-	.filter(({ pos, size, dir, visited, visitKey }) => visited.has(visitKey({ pos, dir, size })))
-	// <debug note="visualize all obstacles that work">
-	// .run(data => (data.first().map.map2d((c, x, y) => 
-	// 		data.some(({ obstacle }) => obstacle[0] == x && obstacle[1] == y) ? 'O' : 
-	// 		data.first().path.has(y * 130 + x) ? 'x' : c)
+	.filter(({ pos, size, dir, visited, visitKey }) => visited.has(pos))
+	// <debug note="visualize all obstacles">
+	// .run(data => (data.first.map.map2d((c, x, y) => 
+	// 		data.some(({ obstacle }) => obstacle.x == x && obstacle.y == y) ? 'O' : 
+	// 		data.first.path.has(y * 130 + x) ? 'x' : c)
 	// 	.map(v => v.join("")).join("\n").print(), data))
 	// </debug>
 	// <debug note="visualize all paths">
 	// .map((data, i) => (i.print(), data.map.map2d((c, x, y) => 
-	// 		x === data.obstacle[0] && y === data.obstacle[1] ? 'O' :
-	// 		data.visited.has([ x, y ].flatIndex2d(data.size)) ? '^' : 
-	// 		data.visited.has([ x, y ].flatIndex2d(data.size) + data.size[0] * data.size[1]) ? '>' : 
-	// 		data.visited.has([ x, y ].flatIndex2d(data.size) + data.size[0] * data.size[1] * 2) ? 'v' : 
-	// 		data.visited.has([ x, y ].flatIndex2d(data.size) + data.size[0] * data.size[1] * 3) ? '<' : 
+	// 		x === data.obstacle.x && y === data.obstacle.y ? 'O' :
+	// 		data.visited.has(new PosRot(x, y, PosRot.N)) ? '^' : 
+	// 		data.visited.has(new PosRot(x, y, PosRot.E)) ? '>' : 
+	// 		data.visited.has(new PosRot(x, y, PosRot.S)) ? 'v' : 
+	// 		data.visited.has(new PosRot(x, y, PosRot.W)) ? '<' : 
 	// 		c)
 	// 		.map(v => v.join("")).join("\n").print(), data))
 	// </debug>

@@ -2,8 +2,7 @@ const utils = require("../utils");
 
 utils.read("input.txt")
 	.chars2d()
-	.wrap()
-	.map(g => [
+	.run(g => [
 		g,
 		g.map(r => r.copy().reverse()),
 		g.transpose(),
@@ -13,7 +12,6 @@ utils.read("input.txt")
 		g.transpose().reverse().diagonal(),
 		g.transpose().reverse().diagonal().map(r => r.copy().reverse()),
 	])
-	.first()
 	.map2d(v => v.join(""))
 	.flat()
 	.map(v => v.count("XMAS"))

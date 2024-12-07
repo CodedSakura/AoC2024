@@ -1,4 +1,5 @@
 const { readFileSync } = require("fs");
+const pos = require("./pos.js");
 
 Object.defineProperties(Array.prototype, {
 	count: { value(query) {
@@ -22,9 +23,6 @@ Object.defineProperties(Array.prototype, {
 	map3d: { value(fn) {
 		return this.map((r, z) => r.map((c, y) => c.map((v, x, a) => fn(v, x, y, z, a))));
 	} },
-	mapWrap: { value(fn) {
-		return [ this ].map(fn)[0];
-	} },
 	findRow: { value(fn) {
 		return this.find((row, y) => row.some((v, x, a) => fn(v, x, y, a)));
 	} },
@@ -37,15 +35,30 @@ Object.defineProperties(Array.prototype, {
 	wrap: { value() {
 		return [ this ];
 	} },
-	first: { value() {
-		return this[0];
-	} },
-	second: { value() {
-		return this[1];
-	} },
-	last: { value() {
-		return this[this.length - 1];
-	} },
+	first: { 
+		get() {
+			return this[0];
+		},
+		set(v) {
+			this[0] = v;
+		},
+	},
+	second: { 
+		get() {
+			return this[1];
+		},
+		set(v) {
+			this[1] = v;
+		},
+	},
+	last: { 
+		get() {
+			return this[this.length - 1];
+		},
+		set(v) {
+			this[this.length - 1] = v;
+		},
+	},
 	min: { value() {
 		return this.reduce((min, val) => min > val ? val : min, +Infinity);
 	} },
@@ -53,12 +66,27 @@ Object.defineProperties(Array.prototype, {
 		return this.reduce((max, val) => max < val ? val : max, -Infinity);
 	} },
 	get2d: { value(x, y) {
-		[ x, y ] = Array.isArray(x) ? x : [ x, y ];
+		[ x, y ] = Array.isArray(x) ? x : 
+			(x instanceof pos.Pos || x instanceof pos.PosRot) ? [ x.x, x.y ] :
+			[ x, y ];
 		return (this[y] ?? [])[x];
 	} },
 	get3d: { value(x, y, z) {
 		[ x, y, z ] = Array.isArray(x) ? x : [ x, y, z ];
 		return ((this[z] ?? [])[y] ?? [])[x];
+	} },
+	set2d: { value(x, y, val) {
+		[ [ x, y ], val ] = Array.isArray(x) ? [ x, val ] : 
+			(x instanceof pos.Pos || x instanceof pos.PosRot) ? [ [ x.x, x.y ], val ] :
+			[ [ x, y ], val ];
+		this[y][x] = val;
+		return this;
+	} },
+	set3d: { value(x, y, z, val) {
+		[ [ x, y, z ], val ] = Array.isArray(x) ? [ x, y ] : 
+			[ [ x, y, z ], val ];
+		this[z][y][x] = val;
+		return this;
 	} },
 	size2d: { value() {
 		return [ this[0].length, this.length ];
@@ -151,6 +179,12 @@ Object.defineProperties(Array.prototype, {
 		if (this.length !== that.length) return false;
 		return this.every((v, i) => Array.isArray(v) ? v.equals(that[i]) : that[i] === v);
 	} },
+	toPos: { value(rot) {
+		if (rot) {
+			return new pos.PosRot(this, rot);
+		}
+		return new pos.Pos(this);
+	} }
 });
 
 Object.defineProperties(String.prototype, {
@@ -215,4 +249,5 @@ Object.defineProperties(Object.prototype, {
 
 module.exports = {
 	read: (name) => readFileSync(name, "utf-8").trim(),
+	...pos,
 };
