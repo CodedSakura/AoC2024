@@ -46,6 +46,12 @@ Object.defineProperties(Array.prototype, {
 	last: { value() {
 		return this[this.length - 1];
 	} },
+	min: { value() {
+		return this.reduce((min, val) => min > val ? val : min, +Infinity);
+	} },
+	max: { value() {
+		return this.reduce((max, val) => max < val ? val : max, -Infinity);
+	} },
 	get2d: { value(x, y) {
 		[ x, y ] = Array.isArray(x) ? x : [ x, y ];
 		return (this[y] ?? [])[x];
