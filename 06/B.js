@@ -1,10 +1,10 @@
 const utils = require("../utils");
-const { Pos, PosRot } = utils;
+const { Pos, Dir } = utils;
 
 utils.read("input.txt")
 	.chars2d()
 	.run((map) => ({
-		start: map.findIndex2d(v => v === '^').toPos(PosRot.Up),
+		start: map.findIndex2d(v => v === '^').toPos(Dir.N),
 		map,
 		size: map.size2d(),
 	}))
@@ -63,10 +63,10 @@ utils.read("input.txt")
 	// <debug note="visualize all paths">
 	// .map((data, i) => (i.print(), data.map.map2d((c, x, y) => 
 	// 		x === data.obstacle.x && y === data.obstacle.y ? 'O' :
-	// 		data.visited.has(new PosRot(x, y, PosRot.N)) ? '^' : 
-	// 		data.visited.has(new PosRot(x, y, PosRot.E)) ? '>' : 
-	// 		data.visited.has(new PosRot(x, y, PosRot.S)) ? 'v' : 
-	// 		data.visited.has(new PosRot(x, y, PosRot.W)) ? '<' : 
+	// 		data.visited.has(new Pos(x, y, PosRot.N)) ? '^' : 
+	// 		data.visited.has(new Pos(x, y, PosRot.E)) ? '>' : 
+	// 		data.visited.has(new Pos(x, y, PosRot.S)) ? 'v' : 
+	// 		data.visited.has(new Pos(x, y, PosRot.W)) ? '<' : 
 	// 		c)
 	// 		.map(v => v.join("")).join("\n").print(), data))
 	// </debug>

@@ -1,32 +1,19 @@
 const utils = require("../utils");
+const { Pos } = utils;
 
 utils.read("input.txt")
 	.chars2d()
-	.run(g => [
-		g,
-		[
-			[ "M", null, "S" ],
-			[ null, "A", null ],
-			[ "M", null, "S" ],
-		],
-		[
-			[ "M", null, "M" ],
-			[ null, "A", null ],
-			[ "S", null, "S" ],
-		],
-		[
-			[ "S", null, "S" ],
-			[ null, "A", null ],
-			[ "M", null, "M" ],
-		],
-		[
-			[ "S", null, "M" ],
-			[ null, "A", null ],
-			[ "S", null, "M" ],
-		],
-	])
-	.run(([g, ...x]) => x.map(w => g.countOverlaps2d(w)))
-	.sum()
+	.run(text => text.map2d((v, x, y) => v === 'A' ? new Pos(x, y) : null)
+		.flat()
+		.filter(v => v) // all positions of 'A'
+		.flatMap(p => p.neigbors8()
+			.filter(n => !n.rot.isCardinal() && text.get2d(n) === 'M')
+			.map(n => new Pos(p, new Pos(p).directionOf(n)))) // all positions of 'A' and directions to 'M'
+		.filter(p => text.get2d(p.move(-1)) === 'S'      // _'S'_, 'A', -> 'M' (\)
+				&& text.get2d(p.cw90().move(+1)) === 'M' // 'M', 'A', ? (/)
+				&& text.get2d(p.cw90().move(-1)) === 'S' // 'M', 'A', 'S' (/)
+			),
+	)
+	.length
 	.print();
 
-// 1854 - too low -- wasn't taking the last col/row in consideration (and the test had it empty)

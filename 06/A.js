@@ -1,10 +1,10 @@
 const utils = require("../utils");
-const { Pos, PosRot } = utils;
+const { Pos, Dir } = utils;
 
 utils.read("input.txt")
 	.chars2d()
 	.run((map) => ({
-		start: map.findIndex2d(v => v === '^').toPos(PosRot.Up),
+		start: map.findIndex2d(v => v === '^').toPos(Dir.N),
 		map,
 		size: map.size2d(),
 	}))

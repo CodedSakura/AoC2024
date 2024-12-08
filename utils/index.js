@@ -67,7 +67,7 @@ Object.defineProperties(Array.prototype, {
 	} },
 	get2d: { value(x, y) {
 		[ x, y ] = Array.isArray(x) ? x : 
-			(x instanceof pos.Pos || x instanceof pos.PosRot) ? [ x.x, x.y ] :
+			x instanceof pos.Pos ? [ x.x, x.y ] :
 			[ x, y ];
 		return (this[y] ?? [])[x];
 	} },
@@ -77,7 +77,7 @@ Object.defineProperties(Array.prototype, {
 	} },
 	set2d: { value(x, y, val) {
 		[ [ x, y ], val ] = Array.isArray(x) ? [ x, val ] : 
-			(x instanceof pos.Pos || x instanceof pos.PosRot) ? [ [ x.x, x.y ], val ] :
+			x instanceof pos.Pos ? [ [ x.x, x.y ], val ] :
 			[ [ x, y ], val ];
 		this[y][x] = val;
 		return this;
@@ -99,68 +99,6 @@ Object.defineProperties(Array.prototype, {
 	copy: { value() {
 		return [ ...this ];
 	} },
-	diagonal: { value() {
-		// https://stackoverflow.com/a/57680560
-		return this.reduceRight((r, a, i, w) => {
-			a.forEach((e, j) => {
-				const pos = j + (w.length - i - 1)
-				if(!r[pos]) r[pos] = []
-				r[pos].unshift(e)
-			})
-
-			return r;
-		}, []);
-	} },
-	combinations: { value() {
-		// https://stackoverflow.com/a/59942031
-		const combi = [];
-		let temp = [];
-		const slent = Math.pow(2, this.length);
-
-		for (var i = 0; i < slent; i++) {
-			temp = [];
-			for (var j = 0; j < this.length; j++) {
-				if ((i & Math.pow(2, j))) {
-					temp.push(this[j]);
-				}
-			}
-			if (temp.length > 0) {
-				combi.push(temp);
-			}
-		}
-		return combi;
-	} },
-	countOverlaps2d: { value(target, nullWildcard = true) {
-		const eq = (a, b) => nullWildcard ? a === null || b === null || a === b : a === b;
-
-		let count = 0;
-
-		for (let y = 0; y < this.length - target.length + 1; y++) {
-			const row = this[y];
-			
-			colFor:
-			for (let x = 0; x < row.length - target[0].length + 1; x++) {
-				if (!eq(row[x], target[0][0])) {
-					continue colFor;
-				}
-
-				for (let ty = 0; ty < target.length; ty++) {
-					const tRow = target[ty];
-					for (let tx = 0; tx < tRow.length; tx++) {
-						// console.log("overlap", `${x} ${y}`, target, "check", `${tx} ${ty}`, `(${this[y+ty][x+tx]} ?= ${target[ty][tx]})`)
-						if (!eq(this[y+ty][x+tx], target[ty][tx])) {
-							continue colFor;
-						}
-					}
-				}
-
-				// console.log("overlap", `${x} ${y}`, target)
-				count++;
-			}
-		}
-
-		return count;
-	} },
 	inBounds: { value(bounds) {
 		return this.every((c, i) => Array.isArray(bounds[i]) ? 
 			bounds[i][0] <= c && c <= bounds[i][1] :
@@ -180,10 +118,7 @@ Object.defineProperties(Array.prototype, {
 		return this.every((v, i) => Array.isArray(v) ? v.equals(that[i]) : that[i] === v);
 	} },
 	toPos: { value(rot) {
-		if (rot) {
-			return new pos.PosRot(this, rot);
-		}
-		return new pos.Pos(this);
+		return new pos.Pos(this, rot);
 	} }
 });
 
