@@ -209,10 +209,17 @@ class Pos {
 
 	/// does not add rotation if provided Pos
 	add(x, y) {
-		if (x instanceof Pos || x instanceof Pos) {
+		if (x instanceof Pos) {
 			return new Pos(this.x + x.x, this.y + x.y, this.rot);
 		}
 		return new Pos(this.x + x, this.y + y, this.rot);
+	}
+
+	sub(x, y) {
+		if (x instanceof Pos) {
+			return new Pos(this.x - x.x, this.y - x.y, this.rot);
+		}
+		return new Pos(this.x - x, this.y - y, this.rot);
 	}
 
 	move(n = 1) {
