@@ -135,8 +135,11 @@ Object.defineProperties(String.prototype, {
 	findAll: { value(expr) {
 		return Array.from(this.matchAll(expr));
 	} },
+	chars: { value() {
+		return this.trim().split("");
+	} },
 	chars2d: { value() {
-		return this.lines().map(v => v.split(""));
+		return this.lines().map(v => v.chars());
 	} },
 	count: { value(text) {
 		return this.split(text).length - 1;
