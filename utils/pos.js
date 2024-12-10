@@ -243,25 +243,25 @@ class Pos {
 		return new PosRot(this.x, this.y + y, this.rot);
 	}
 
-	neigbors4() {
+	neigbors4(setDir = true) {
 		return [
-			new Pos(this.x,     this.y - 1, Dir.N),
-			new Pos(this.x - 1, this.y    , Dir.W),
-			new Pos(this.x + 1, this.y    , Dir.E),
-			new Pos(this.x,     this.y + 1, Dir.S),
+			new Pos(this.x,     this.y - 1, setDir ? Dir.N : undefined),
+			new Pos(this.x - 1, this.y    , setDir ? Dir.W : undefined),
+			new Pos(this.x + 1, this.y    , setDir ? Dir.E : undefined),
+			new Pos(this.x,     this.y + 1, setDir ? Dir.S : undefined),
 		];
 	}
 
-	neigbors8() {
+	neigbors8(setDir = true) {
 		return [
-			new Pos(this.x - 1, this.y - 1, Dir.NW),
-			new Pos(this.x,     this.y - 1, Dir.N),
-			new Pos(this.x + 1, this.y - 1, Dir.NE),
-			new Pos(this.x - 1, this.y    , Dir.W),
-			new Pos(this.x + 1, this.y    , Dir.E),
-			new Pos(this.x - 1, this.y + 1, Dir.SW),
-			new Pos(this.x,     this.y + 1, Dir.S),
-			new Pos(this.x + 1, this.y + 1, Dir.SE),
+			new Pos(this.x - 1, this.y - 1, setDir ? Dir.NW : undefined),
+			new Pos(this.x,     this.y - 1, setDir ? Dir.N  : undefined),
+			new Pos(this.x + 1, this.y - 1, setDir ? Dir.NE : undefined),
+			new Pos(this.x - 1, this.y    , setDir ? Dir.W  : undefined),
+			new Pos(this.x + 1, this.y    , setDir ? Dir.E  : undefined),
+			new Pos(this.x - 1, this.y + 1, setDir ? Dir.SW : undefined),
+			new Pos(this.x,     this.y + 1, setDir ? Dir.S  : undefined),
+			new Pos(this.x + 1, this.y + 1, setDir ? Dir.SE : undefined),
 		];
 	}
 
