@@ -166,7 +166,7 @@ Object.defineProperties(Object.prototype, {
 			p = this.toString();
 		}
 
-		if (label) {
+		if (label !== undefined) {
 			console.log(label, p);
 		} else {
 			console.log(p);
@@ -182,6 +182,9 @@ Object.defineProperties(Object.prototype, {
 			data = fn(data);
 		}
 		return data;
+	} },
+	collect: { value() {
+		return [...this];
 	} },
 });
 
