@@ -14,8 +14,8 @@ utils.read("input.txt")
 			newRegion = new Set([ plot ]),
 			map.delete(plot),
 			[plot].while(
-				plots => plots.some(p => p.neigbors4(false).some(n => map.get(n) === plant)),
-				plots => plots.flatMap(p => p.neigbors4(false))
+				plots => plots.some(p => p.neighbors4(false).some(n => map.get(n) === plant)),
+				plots => plots.flatMap(p => p.neighbors4(false))
 						.unique()
 						.filter(n => map.get(n) === plant)
 						.map(n => (
@@ -31,7 +31,7 @@ utils.read("input.txt")
 	.second
 	.map(({ plots }) => ({
 		area: plots.size,
-		perimeter: plots.collect().map(p => p.neigbors4(false).filter(n => !plots.has(n)).length).sum(),
+		perimeter: plots.collect().map(p => p.neighbors4(false).filter(n => !plots.has(n)).length).sum(),
 	}))
 	.map(({ area, perimeter }) => area * perimeter)
 	.sum()

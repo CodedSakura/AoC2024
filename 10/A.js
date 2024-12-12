@@ -18,7 +18,7 @@ utils.read("input.txt")
 				p => p.some(v => map.get2d(v) != 9),
 				p => p.flatMap(v => (
 						c = map.get2d(v),
-						v.neigbors4(false).filter(n => map.get2d(n) > c)
+						v.neighbors4(false).filter(n => map.get2d(n) > c)
 					)).unique()
 			).length
 		)
