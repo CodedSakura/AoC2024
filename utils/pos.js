@@ -17,6 +17,13 @@ class _Dir {
 			this.equals(Dir.W);
 	}
 
+	isHorizontal() {
+		return this.equals(Dir.E) || this.equals(Dir.W);
+	}
+	isVertical() {
+		return this.equals(Dir.N) || this.equals(Dir.S);
+	}
+
 	makePos(n) {
 		if (this.equals(Dir.N)) {
 			return new Pos(0, -n);
@@ -243,25 +250,25 @@ class Pos {
 		return new PosRot(this.x, this.y + y, this.rot);
 	}
 
-	neigbors4(setDir = true) {
+	neighbors4(setDir = true) {
 		return [
-			new Pos(this.x,     this.y - 1, setDir ? Dir.N : undefined),
-			new Pos(this.x - 1, this.y    , setDir ? Dir.W : undefined),
-			new Pos(this.x + 1, this.y    , setDir ? Dir.E : undefined),
-			new Pos(this.x,     this.y + 1, setDir ? Dir.S : undefined),
+			new Pos(this.x,     this.y - 1, setDir ? Dir.N : this.rot),
+			new Pos(this.x - 1, this.y    , setDir ? Dir.W : this.rot),
+			new Pos(this.x + 1, this.y    , setDir ? Dir.E : this.rot),
+			new Pos(this.x,     this.y + 1, setDir ? Dir.S : this.rot),
 		];
 	}
 
-	neigbors8(setDir = true) {
+	neighbors8(setDir = true) {
 		return [
-			new Pos(this.x - 1, this.y - 1, setDir ? Dir.NW : undefined),
-			new Pos(this.x,     this.y - 1, setDir ? Dir.N  : undefined),
-			new Pos(this.x + 1, this.y - 1, setDir ? Dir.NE : undefined),
-			new Pos(this.x - 1, this.y    , setDir ? Dir.W  : undefined),
-			new Pos(this.x + 1, this.y    , setDir ? Dir.E  : undefined),
-			new Pos(this.x - 1, this.y + 1, setDir ? Dir.SW : undefined),
-			new Pos(this.x,     this.y + 1, setDir ? Dir.S  : undefined),
-			new Pos(this.x + 1, this.y + 1, setDir ? Dir.SE : undefined),
+			new Pos(this.x - 1, this.y - 1, setDir ? Dir.NW : this.rot),
+			new Pos(this.x,     this.y - 1, setDir ? Dir.N  : this.rot),
+			new Pos(this.x + 1, this.y - 1, setDir ? Dir.NE : this.rot),
+			new Pos(this.x - 1, this.y    , setDir ? Dir.W  : this.rot),
+			new Pos(this.x + 1, this.y    , setDir ? Dir.E  : this.rot),
+			new Pos(this.x - 1, this.y + 1, setDir ? Dir.SW : this.rot),
+			new Pos(this.x,     this.y + 1, setDir ? Dir.S  : this.rot),
+			new Pos(this.x + 1, this.y + 1, setDir ? Dir.SE : this.rot),
 		];
 	}
 
