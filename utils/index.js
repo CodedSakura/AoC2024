@@ -1,4 +1,4 @@
-const { readFileSync } = require("fs");
+const { readFileSync, writeFileSync } = require("fs");
 const pos = require("./pos.js");
 const BigDecimal = require("./BigDecimal.js");
 
@@ -122,6 +122,14 @@ Object.defineProperties(Array.prototype, {
 		return new pos.Pos(this, rot);
 	} }
 });
+Object.defineProperties(Array, {
+	fromSize2d: { value(x, y, fn) {
+		if (typeof x === "object" && "x" in x) {
+			return Array.fromSize2d(x.x, x.y, y);
+		}
+		return Array.from({ length: y }, (_,y) => Array.from({ length: x }, (_,x) => fn(x, y)));
+	} },
+});
 
 Object.defineProperties(String.prototype, {
 	lines: { value() {
@@ -191,6 +199,7 @@ Object.defineProperties(Object.prototype, {
 
 module.exports = {
 	read: (name) => readFileSync(name, "utf-8").trim(),
+	write: (name, data) => writeFileSync(name, data.toString()),
 	BigDecimal,
 	...pos,
 };
