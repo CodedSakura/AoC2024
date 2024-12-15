@@ -229,25 +229,30 @@ class Pos {
 		return new Pos(this.x - x, this.y - y, this.rot);
 	}
 
-	move(n = 1) {
-		if (this.rot === undefined) {
+	move(dir = this.rot, n = 1) {
+		if (typeof dir === "number") {
+			n = dir;
+			dir = this.rot;
+		}
+
+		if (dir === undefined) {
 			throw new Error("Cannot move without set rotation");
 		}
-		return this.add(this.rot.makePos(n));
+		return this.add(dir.makePos(n));
 	}
 
 	get x() {
 		return this.#x;
 	}
 	set x(x) {
-		return new PosRot(this.x + x, this.y, this.rot);
+		return new Pos(this.x + x, this.y, this.rot);
 	}
 
 	get y() {
 		return this.#y;
 	}
 	set y(y) {
-		return new PosRot(this.x, this.y + y, this.rot);
+		return new Pos(this.x, this.y + y, this.rot);
 	}
 
 	neighbors4(setDir = true) {
@@ -306,20 +311,20 @@ class Pos {
 		if (this.rot === undefined) {
 			throw new Error("Cannot rotate without set rotation");
 		}
-		return new PosRot(this.pos, this.rot.counterclockwise90());
+		return new Pos(this.pos, this.rot.counterclockwise90());
 	}
 	counterclockwise45() {
 		if (this.rot === undefined) {
 			throw new Error("Cannot rotate without set rotation");
 		}
-		return new PosRot(this.pos, this.rot.counterclockwise45());
+		return new Pos(this.pos, this.rot.counterclockwise45());
 	}
 
 	flip() {
 		if (this.rot === undefined) {
 			throw new Error("Cannot rotate without set rotation");
 		}
-		return new PosRot(this.pos, this.rot.flip());
+		return new Pos(this.pos, this.rot.flip());
 	}
 
 	inBounds(bounds) {
