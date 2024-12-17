@@ -123,9 +123,12 @@ Object.defineProperties(Array.prototype, {
 	} }
 });
 Object.defineProperties(Array, {
-	fromSize2d: { value(x, y, fn) {
+	fromSize2d: { value(x, y, fn = (() => undefined)) {
 		if (typeof x === "object" && "x" in x) {
-			return Array.fromSize2d(x.x, x.y, y);
+			return Array.fromSize2d(x.x, x.y, y ?? (() => undefined));
+		}
+		if (Array.isArray(x)) {
+			return Array.fromSize2d(x[0], x[1], y ?? (() => undefined));
 		}
 		return Array.from({ length: y }, (_,y) => Array.from({ length: x }, (_,x) => fn(x, y)));
 	} },
