@@ -13,4 +13,9 @@ module.exports = class {
 		this.#map.set(k, this.#fn(k));
 		return this.get(k);
 	}
+
+	set(k, v) {
+		this.#map.set(k, v);
+		return this;
+	}
 };
