@@ -1,6 +1,5 @@
 const { readFileSync, writeFileSync } = require("fs");
 const pos = require("./pos.js");
-const BigDecimal = require("./BigDecimal.js");
 
 Object.defineProperties(Array.prototype, {
 	count: { value(query) {
@@ -203,6 +202,7 @@ Object.defineProperties(Object.prototype, {
 module.exports = {
 	read: (name) => readFileSync(name, "utf-8").trim(),
 	write: (name, data) => writeFileSync(name, data.toString()),
-	BigDecimal,
+	BigDecimal: require("./BigDecimal.js"),
+	Memoize: require("./Memoize.js"),
 	...pos,
 };

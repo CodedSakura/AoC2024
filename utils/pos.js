@@ -244,12 +244,18 @@ class Pos {
 	get x() {
 		return this.#x;
 	}
+	get [0]() {
+		return this.x;
+	}
 	set x(x) {
 		return new Pos(this.x + x, this.y, this.rot);
 	}
 
 	get y() {
 		return this.#y;
+	}
+	get [1]() {
+		return this.y;
 	}
 	set y(y) {
 		return new Pos(this.x, this.y + y, this.rot);
